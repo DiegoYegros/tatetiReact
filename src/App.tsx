@@ -1,19 +1,19 @@
 import { useState } from 'react'
 import './App.css'
 import confetti from "canvas-confetti"
-import {Square} from './components/Square.jsx'
-import {checkWinner} from './utils/checkWinner'
-import { TURNS} from './constants'
+import { Square } from './components/Square.jsx'
+import { checkWinner } from './utils/checkWinner'
+import { TURNS } from './constants'
 import { WinnerModal } from './components/WinnerModal.jsx'
 function App() {
-  const [board, setBoard] = useState(()=> {
+  const [board, setBoard] = useState(() => {
     const boardFromStorage = window.localStorage.getItem('board')
-    return boardFromStorage ? JSON.parse(boardFromStorage) :Array(9).fill(null)
+    return boardFromStorage ? JSON.parse(boardFromStorage) : Array(9).fill(null)
   })
   const [turn, setTurn] = useState(() => {
     const turnFromStorage = window.localStorage.getItem('turn')
     return turnFromStorage ? turnFromStorage : TURNS.X
-    })
+  })
   const [winner, setWinner] = useState(null)
 
   const resetGame = () => {
@@ -29,21 +29,21 @@ function App() {
     const newBoard = [...board]
     newBoard[index] = turn
     setBoard(newBoard)
-    const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X    
+    const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X
     setTurn(newTurn)
     window.localStorage.setItem('board', JSON.stringify(newBoard))
     window.localStorage.setItem('turn', newTurn)
     const newWinner = checkWinner(newBoard)
-    if (newWinner){
+    if (newWinner) {
       confetti()
       alert('Winner is ' + newWinner)
       setWinner(newWinner)
-    } else if (checkEndGame(newBoard)){
+    } else if (checkEndGame(newBoard)) {
       alert('No Winner')
       setWinner(false)
     }
   }
-  
+
 
   return (
     <main className='board'>
@@ -55,23 +55,23 @@ function App() {
             return (
               <Square key={index} index={index} updateBoard={updateBoard}>
                 {square}
-                </Square>
-                )
+              </Square>
+            )
           })
         }
       </section>
-        <section className='turn'>
-          <Square isSelected={turn === TURNS.X}>
-            {TURNS.X}
-          </Square>
-          <Square isSelected={turn === TURNS.O}>
-            {TURNS.O}
-            </Square>
-        </section>
-        <WinnerModal resetGame={resetGame} winner={winner}/>
+      <section className='turn'>
+        <Square isSelected={turn === TURNS.X}>
+          {TURNS.X}
+        </Square>
+        <Square isSelected={turn === TURNS.O}>
+          {TURNS.O}
+        </Square>
+      </section>
+      <WinnerModal resetGame={resetGame} winner={winner} />
 
     </main>
-    )
+  )
 }
 
 export default App
